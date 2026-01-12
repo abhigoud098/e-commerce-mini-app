@@ -1,9 +1,10 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import ApiContextProvider
+ from "./context/apiContextProvider.jsx";
+ 
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <ApiContextProvider>
     <App />
-  </StrictMode>,
-)
+  </ApiContextProvider>
+);

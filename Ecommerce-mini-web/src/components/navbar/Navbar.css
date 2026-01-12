@@ -43,10 +43,12 @@ ul {
   gap: 20px;
 }
 
-ul li {
+ul a {
   font-size: 16px;
   color: #ff6d1f;
   font-weight: bold;
+  text-decoration: none;
+  font-family: "Liter", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }
-
-
