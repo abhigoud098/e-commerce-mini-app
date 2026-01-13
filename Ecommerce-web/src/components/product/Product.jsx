@@ -3,7 +3,7 @@ import ApiContext from "../../context/apiContext";
 import ProductCard from "../productCard/ProductCard";
 
 function Product() {
-  const { data, searchItem, searchQuery } = useContext(ApiContext);
+  const { data, searchItem } = useContext(ApiContext);
 
   const isSearchActive = searchItem.trim().length > 0;
   const products = data?.products || [];
@@ -13,7 +13,7 @@ function Product() {
     return <h2>Loading...</h2>;
   }
 
-  const search = searchQuery.trim().toLowerCase();
+  const search = searchItem.trim().toLowerCase();
 
   const filteredProducts = search
     ? products.filter((product) =>

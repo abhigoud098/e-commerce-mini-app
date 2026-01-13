@@ -5,7 +5,8 @@ import ApiContext from "../../context/apiContext";
 
 function Home() {
   const { data, searchItem, searchQuery } = useContext(ApiContext);
-
+  console.log(searchQuery);
+  
   const [startProduct] = useState(() => Math.floor(Math.random() * 30));
   const [productNum, setProductNum] = useState(startProduct);
 
@@ -28,7 +29,7 @@ function Home() {
   if (products.length === 0) {
     return <h2>Loading...</h2>;
   }
-  const search = searchQuery.trim().toLowerCase();
+  const search = searchQuery.toLowerCase();
 
   const filteredProducts = search
     ? products.filter((product) =>

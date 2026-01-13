@@ -5,9 +5,7 @@ function ApiContextProvider({ children }) {
   const [data, setData] = useState(null);
   const [searchItem, setSearchItem] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-
-  console.log(searchQuery);
-  
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -23,7 +21,18 @@ function ApiContextProvider({ children }) {
   console.log(data);
 
   return (
-    <ApiContext.Provider value={{ data, setData, searchItem, setSearchItem, searchQuery, setSearchQuery }}>
+    <ApiContext.Provider
+      value={{
+        data,
+        setData,
+        searchItem,
+        setSearchItem,
+        searchQuery,
+        setSearchQuery,
+        user,
+        setUser
+      }}
+    >
       {children}
     </ApiContext.Provider>
   );

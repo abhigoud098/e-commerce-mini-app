@@ -1,0 +1,55 @@
+import { useState } from "react";
+import { FaHeart, FaRegHeart, FaShareAlt } from "react-icons/fa";
+import "./ProductCard.css";
+
+function ProductCard({ data }) {
+  const [liked, setLiked] = useState(false);
+
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+
+    if (navigator.share) {
+      await navigator.share({
+        title: data?.title,
+        text: data?.description,
+        url: shareUrl,
+      });
+    } else {
+      navigator.clipboard.writeText(shareUrl);
+      alert("Link copied");
+    }
+  };
+
+  return (
+    <div className="product-card">
+      <div className="image-box">
+        <img src={data?.images[0]} alt={data?.brand} />
+
+        {/* TOP RIGHT ICONS */}
+        <div className="top-icons">
+          <button className="icon-btn" onClick={() => setLiked(!liked)}>
+            {liked ? <FaHeart /> : <FaRegHeart />}
+          </button>
+
+          <button className="icon-btn" onClick={handleShare}>
+            <FaShareAlt />
+          </button>
+        </div>
+      </div>
+
+      <div className="product-info">
+        <h3>{data?.title}</h3>
+        <p className="desc">{data?.description}</p>
+
+        <div className="rating-price">
+          <span className="rating">⭐ {data?.rating}</span>
+          <span className="original-price">₹{data?.price}</span>
+        </div>
+
+        <button className="cart-btn">Add to Cart</button>
+      </div>
+    </div>
+  );
+}
+
+export default ProductCard;
