@@ -1,8 +1,51 @@
+import { useContext } from "react";
+import ApiContext from "../../context/apiContext";
+import ProductCard from "../productCard/ProductCard";
+
 function Product() {
+  const { data, searchItem, searchQuery } = useContext(ApiContext);
+
+  const isSearchActive = searchItem.trim().length > 0;
+  const products = data?.products || [];
+
+  // Loading UI AFTER hooks
+  if (products.length === 0) {
+    return <h2>Loading...</h2>;
+  }
+
+  const search = searchQuery.trim().toLowerCase();
+
+  const filteredProducts = search
+    ? products.filter((product) =>
+        product.title.toLowerCase().startsWith(search)
+      )
+    : [];
+
+  // 🔍 SEARCH VIEW
+  if (isSearchActive) {
+    return (
+      <div className="still-you-want">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((item) => (
+            <div className="product-component" key={item.id}>
+              <ProductCard data={item} />
+            </div>
+          ))
+        ) : (
+          <h3>No products found</h3>
+        )}
+      </div>
+    );
+  }
+
   return (
-    <>
-      <h1>product</h1>
-    </>
+    <div className="still-you-want">
+      {products.slice(0, 12).map((item) => (
+        <div className="product-component" key={item.id}>
+          <ProductCard data={item} />
+        </div>
+      ))}
+    </div>
   );
 }
 

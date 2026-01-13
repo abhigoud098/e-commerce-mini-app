@@ -1,5 +1,5 @@
 .product-card {
-  height: 45vh;
+  height: 43vh;
   width: 15vw;
   min-width: 220px;
 
@@ -57,7 +57,7 @@
 }
 
 .product-info h3 {
-  font-size: 17px;
+  font-size: 13px;
   margin-bottom: 6px;
 }
 
@@ -69,7 +69,7 @@
 
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
 }
 

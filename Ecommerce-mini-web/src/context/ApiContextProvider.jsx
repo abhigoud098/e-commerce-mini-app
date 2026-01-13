@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 function ApiContextProvider({ children }) {
   const [data, setData] = useState(null);
   const [searchItem, setSearchItem] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  console.log(searchQuery);
+  
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -19,7 +23,7 @@ function ApiContextProvider({ children }) {
   console.log(data);
 
   return (
-    <ApiContext.Provider value={{ data, setData, searchItem, setSearchItem }}>
+    <ApiContext.Provider value={{ data, setData, searchItem, setSearchItem, searchQuery, setSearchQuery }}>
       {children}
     </ApiContext.Provider>
   );

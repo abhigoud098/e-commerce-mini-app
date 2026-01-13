@@ -4,18 +4,16 @@ import "./Home.css";
 import ApiContext from "../../context/apiContext";
 
 function Home() {
-  const { data } = useContext(ApiContext);
-  const { searchItem } = useContext(ApiContext);
-
-  const filteredProducts = data?.products?.filter((product) =>
-    product.title.toLowerCase().includes(searchItem.toLowerCase())
-  );
+  const { data, searchItem, searchQuery } = useContext(ApiContext);
 
   const [startProduct] = useState(() => Math.floor(Math.random() * 30));
   const [productNum, setProductNum] = useState(startProduct);
 
+  const isSearchActive = searchItem.trim().length > 0;
+  const products = data?.products || [];
+
   useEffect(() => {
-    if (!data?.products) return;
+    if (isSearchActive || products.length === 0) return;
 
     const timer = setInterval(() => {
       setProductNum((prev) =>
@@ -24,13 +22,38 @@ function Home() {
     }, 4000);
 
     return () => clearInterval(timer);
-  }, [data, startProduct]);
+  }, [startProduct, isSearchActive, products.length]);
 
-  if (!data?.products) {
+  // Loading UI AFTER hooks
+  if (products.length === 0) {
     return <h2>Loading...</h2>;
   }
+  const search = searchQuery.trim().toLowerCase();
 
-  const product = data.products[productNum];
+  const filteredProducts = search
+    ? products.filter((product) =>
+        product.title.toLowerCase().startsWith(search)
+      )
+    : [];
+
+  const product = products[productNum];
+
+  // 🔍 SEARCH VIEW
+  if (isSearchActive) {
+    return (
+      <div className="still-you-want">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((item) => (
+            <div className="product-component" key={item.id}>
+              <ProductCard data={item} />
+            </div>
+          ))
+        ) : (
+          <h3>No products found</h3>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="main-content-container">
@@ -51,7 +74,7 @@ function Home() {
       </div>
 
       <div className="still-you-want">
-        {data.products.slice(0, 6).map((item) => (
+        {products.slice(0, 6).map((item) => (
           <div className="product-component" key={item.id}>
             <ProductCard data={item} />
           </div>

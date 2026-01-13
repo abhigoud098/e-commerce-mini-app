@@ -4,7 +4,14 @@ import { Link } from "react-router-dom";
 import ApiContext from "../../context/apiContext";
 
 function Navbar() {
-  const {searchItem, setSearchItem} = useContext(ApiContext);
+  const { searchItem, setSearchItem, setSearchQuery } = useContext(ApiContext);
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setSearchItem("");
+    }
+  };
+
   return (
     <>
       <div className="nav-container">
@@ -15,8 +22,9 @@ function Navbar() {
           className="input"
           value={searchItem}
           onChange={(e) => {
-            setSearchItem(e.target.value);
+            setSearchQuery(setSearchItem(e.target.value).trim());
           }}
+          onKeyDown={handleKeyDown}
         />
         <ul>
           <Link to="/">Home</Link>
