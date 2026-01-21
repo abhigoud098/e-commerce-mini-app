@@ -1,7 +1,6 @@
 import "./LandingPage.css";
 import { Link } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import SignUp from "../signUp/SignUp";
 
 function LandingPage() {
   return (

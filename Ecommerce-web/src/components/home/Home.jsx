@@ -1,43 +1,41 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import ProductCard from "../productCard/ProductCard";
 import "./Home.css";
 import ApiContext from "../../context/apiContext";
+import Fuse from "fuse.js";
 
 function Home() {
-  const { data, searchItem, searchQuery } = useContext(ApiContext);
-  console.log(searchQuery);
+  const { data, searchItem } = useContext(ApiContext);
+  const products = data?.products || [];
 
   const [startProduct] = useState(() => Math.floor(Math.random() * 30));
   const [productNum, setProductNum] = useState(startProduct);
 
-  const isSearchActive = searchItem.trim().length > 0;
-  const products = data?.products || [];
+  // 🎯 Create Fuse.js instance (memoized so it doesn’t recreate on every render)
+  const fuse = useMemo(() => {
+    if (!products.length) return null;
+    return new Fuse(products, {
+      keys: ["title", "brand", "category"],
+      threshold: 0.4,
+    });
+  }, [products]);
 
+  // 🔍 Search logic
+  const filteredProducts = useMemo(() => {
+    if (!fuse || !searchItem.trim()) return [];
+    return fuse.search(searchItem).map(result => result.item);
+  }, [fuse, searchItem]);
+
+  // 🔁 Auto-rotate banner product
   useEffect(() => {
-    if (isSearchActive || products.length === 0) return;
-
     const timer = setInterval(() => {
-      setProductNum((prev) =>
-        prev === startProduct + 3 ? startProduct : prev + 1
-      );
+      setProductNum(prev => (prev === startProduct + 3 ? startProduct : prev + 1));
     }, 4000);
-
     return () => clearInterval(timer);
-  }, [startProduct, isSearchActive, products.length]);
-
-  // Loading UI AFTER hooks
-  if (products.length === 0) {
-    return <h2>Loading...</h2>;
-  }
-  const search = searchQuery.toLowerCase();
-
-  const filteredProducts = search
-    ? products.filter((product) =>
-        product.title.toLowerCase().startsWith(search)
-      )
-    : [];
+  }, [startProduct]);
 
   const product = products[productNum];
+  const isSearchActive = searchItem.trim().length > 0;
 
   // 🔍 SEARCH VIEW
   if (isSearchActive) {
@@ -56,23 +54,23 @@ function Home() {
     );
   }
 
+  // 🏠 NORMAL HOME VIEW
   return (
     <div className="main-content-container">
-      <div className="hero-banner">
-        <img src={product?.images?.[0]} alt="banner" className="hero-image" />
-
-        <div className="hero-overlay">
-          <h1>Starting ₹{product?.price}</h1>
-          <h4 className="subtitle">{product?.title}</h4>
-
-          <div className="brands">
-            <span>{product?.brand}</span>
-            <span id="availabilityStatus">{product?.availabilityStatus}</span>
+      {product && (
+        <div className="hero-banner">
+          <img src={product?.images?.[0]} alt="banner" className="hero-image" />
+          <div className="hero-overlay">
+            <h1>Starting ₹{product?.price}</h1>
+            <h4 className="subtitle">{product?.title}</h4>
+            <div className="brands">
+              <span>{product?.brand}</span>
+              <span id="availabilityStatus">{product?.availabilityStatus}</span>
+            </div>
+            <button className="shop-btn">Shop Now</button>
           </div>
-
-          <button className="shop-btn">Shop Now</button>
         </div>
-      </div>
+      )}
 
       <div className="still-you-want">
         {products.slice(0, 6).map((item) => (
